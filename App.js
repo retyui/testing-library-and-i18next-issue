@@ -1,111 +1,73 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
-import type {Node} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {Text, View, StyleSheet, Button} from 'react-native';
+import I18N from 'i18next';
+import {Trans, initReactI18next, useTranslation} from 'react-i18next';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+I18N.use(initReactI18next).init({
+  resources: {
+    en: {
+      translation: {
+        'My test': 'My test',
+        'Open <1>link</1>': 'Open <1>link</1>',
+        'Hello <1>{{name}}</1>!': 'Hello <1>{{name}}</1>!',
+      },
+    },
+    sv: {
+      translation: {
+        'My test': 'Mitt test',
+        'Open <1>link</1>': 'Öppna <1>länk</1>',
+        'Hello <1>{{name}}</1>!': 'Hej <1>{{name}}</1>!',
+      },
+    },
+  },
+  lng: 'en',
+  fallbackLng: 'en',
+  nsSeparator: false,
+  keySeparator: false,
+  debug: true,
+});
 
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
+const App = () => {
+  const {t, i18n} = useTranslation();
+
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
+    <View padding={100}>
+      <Button
+        title={`Change lang: ${i18n.language}`}
+        onPress={() =>
+          i18n.changeLanguage(i18n.language === 'en' ? 'sv' : 'en')
+        }
+      />
+
+      <Text>
+        <Trans t={t}>My test</Trans>
       </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
+
+      <Text>
+        <Trans t={t}>
+          Open <Text style={styles.link}>link</Text>
+        </Trans>
+      </Text>
+
+      <Text>
+        <Trans t={t} values={{name: 'callstack'}}>
+          Hello <Text style={styles.bold}>{'{{name}}'}</Text>!
+        </Trans>
       </Text>
     </View>
   );
 };
 
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
-
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
+  bold: {
     fontWeight: '700',
+  },
+  link: {
+    fontWeight: '500',
+    textDecorationLine: 'underline',
+    textDecorationStyle: 'solid',
+    textDecorationColor: 'blue',
+    color: 'blue',
   },
 });
 
